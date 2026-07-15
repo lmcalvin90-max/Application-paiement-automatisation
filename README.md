@@ -1,4 +1,4 @@
-# Application de Paiement Marchand — Sujet 3
+# Application de Paiement Marchand CALVIN ET BRICE
 
 Application DevOps clé en main : encaissement en caisse, validation métier stricte, persistance PostgreSQL, reverse proxy Nginx, et pipeline CI/CD GitHub Actions.
 
