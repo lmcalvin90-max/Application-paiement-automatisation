@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paiement Marchand — Encaissement</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          navy: { 900: '#0b1220', 800: '#101a2e', 700: '#16223b' },
+          emerald: { 500: '#10b981', 600: '#059669' },
+          slate: { 850: '#182234' }
+        },
+        fontFamily: { sans: ['Inter', 'ui-sans-serif', 'system-ui'] }
+      }
+    }
+  }
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  body { font-family: 'Inter', sans-serif; }
+  @keyframes slideIn { from { opacity: 0; transform: translateY(-12px); } to { opacity: 1; transform: translateY(0); } }
+  .animate-slide-in { animation: slideIn .35s ease-out; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .animate-fade-in { animation: fadeIn .4s ease-out; }
+  ::-webkit-scrollbar { width: 8px; }
+  ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 8px; }
+</style>
+</head>
+<body class="bg-navy-900 text-slate-100 min-h-screen">
+
+<header class="border-b border-white/5 bg-navy-800/60 backdrop-blur sticky top-0 z-10">
+  <div class="max-w-5xl mx-auto px-6 py-5 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div class="w-9 h-9 rounded-lg bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+      </div>
+      <div>
+        <p class="font-bold text-lg leading-none tracking-tight">Paiement Marchand</p>
+        <p class="text-xs text-slate-400 mt-0.5">Encaissement point de vente</p>
+      </div>
+    </div>
+    <span class="text-xs px-3 py-1 rounded-full bg-slate-850 border border-white/10 text-slate-300">Sujet 3 · Interne</span>
+  </div>
+</header>
+
+<main class="max-w-5xl mx-auto px-6 py-10 grid grid-cols-1 lg:grid-cols-5 gap-8">
+
+  <section class="lg:col-span-2">
+    <div class="bg-navy-800 border border-white/5 rounded-2xl p-6 shadow-xl shadow-black/20">
+      <h2 class="text-lg font-semibold mb-1">Nouvelle transaction</h2>
+      <p class="text-sm text-slate-400 mb-6">Renseignez au moins un canal de contact.</p>
+
+      <form id="payment-form" class="space-y-4" novalidate>
+        <div>
+          <label class="block text-xs font-medium text-slate-400 mb-1.5" for="caisse_id">Identifiant de la caisse</label>
+          <select id="caisse_id" name="caisse_id" class="w-full bg-slate-850 border border-white/10 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50">
+            <option value="">Sélectionner une caisse</option>
+            <option value="CAISSE_01">CAISSE_01</option>
+            <option value="CAISSE_02">CAISSE_02</option>
+            <option value="CAISSE_03">CAISSE_03</option>
+          </select>
+          <p class="field-error text-xs text-rose-400 mt-1 hidden" data-error-for="caisse_id"></p>
+        </div>
+
+        <div>
+          <label class="block text-xs font-medium text-slate-400 mb-1.5" for="nom_client">Nom du client</label>
+          <input id="nom_client" name="nom_client" type="text" placeholder="Ex. Camille Martin" class="w-full bg-slate-850 border border-white/10 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50">
+          <p class="field-error text-xs text-rose-400 mt-1 hidden" data-error-for="nom_client"></p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-medium text-slate-400 mb-1.5" for="telephone">Téléphone</label>
+            <input id="telephone" name="telephone" type="tel" placeholder="+33612345678" class="w-full bg-slate-850 border border-white/10 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50">
+            <p class="field-error text-xs text-rose-400 mt-1 hidden" data-error-for="telephone"></p>
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-400 mb-1.5" for="email">E-mail</label>
+            <input id="email" name="email" type="email" placeholder="client@exemple.com" class="w-full bg-slate-850 border border-white/10 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50">
+            <p class="field-error text-xs text-rose-400 mt-1 hidden" data-error-for="email"></p>
+          </div>
+        </div>
+        <p class="field-error text-xs text-rose-400 -mt-2 hidden" data-error-for="contact"></p>
+
+        <div>
+          <label class="block text-xs font-medium text-slate-400 mb-1.5" for="montant">Montant (€)</label>
+          <input id="montant" name="montant" type="number" step="0.01" min="0" placeholder="0.00" class="w-full bg-slate-850 border border-white/10 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50">
+          <p class="field-error text-xs text-rose-400 mt-1 hidden" data-error-for="montant"></p>
+        </div>
+
+        <button id="submit-btn" type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 transition-colors rounded-lg py-3 text-sm font-semibold flex items-center justify-center gap-2">
+          <svg id="btn-spinner" class="hidden animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"/></svg>
+          <span id="btn-label">Encaisser le paiement</span>
+        </button>
+      </form>
+
+      <div id="alert-zone" class="mt-4"></div>
+    </div>
+  </section>
+
+  <section class="lg:col-span-3">
+    <div class="bg-navy-800 border border-white/5 rounded-2xl p-6 shadow-xl shadow-black/20">
+      <div class="flex items-center justify-between mb-5">
+        <h2 class="text-lg font-semibold">Historique des transactions</h2>
+        <button id="refresh-btn" class="text-xs text-slate-400 hover:text-emerald-400 transition-colors flex items-center gap-1.5">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0115-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 01-15 6.7L3 16"/></svg>
+          Actualiser
+        </button>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="text-left text-xs text-slate-400 border-b border-white/10">
+              <th class="pb-3 font-medium">Réf. transaction</th>
+              <th class="pb-3 font-medium">Caisse</th>
+              <th class="pb-3 font-medium">Client</th>
+              <th class="pb-3 font-medium">Contact</th>
+              <th class="pb-3 font-medium text-right">Montant</th>
+              <th class="pb-3 font-medium text-right">Date</th>
+            </tr>
+          </thead>
+          <tbody id="transactions-body" class="divide-y divide-white/5"></tbody>
+        </table>
+        <p id="empty-state" class="text-sm text-slate-500 text-center py-10 hidden">Aucune transaction enregistrée pour le moment.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+const form = document.getElementById('payment-form');
+const submitBtn = document.getElementById('submit-btn');
+const btnSpinner = document.getElementById('btn-spinner');
+const btnLabel = document.getElementById('btn-label');
+const alertZone = document.getElementById('alert-zone');
+const transactionsBody = document.getElementById('transactions-body');
+const emptyState = document.getElementById('empty-state');
+
+const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+const TELEPHONE_REGEX = /^\+[1-9]\d{7,14}$/;
+
+function clearFieldErrors() {
+  document.querySelectorAll('.field-error').forEach(el => { el.classList.add('hidden'); el.textContent = ''; });
+}
+
+function showFieldError(field, message) {
+  const el = document.querySelector(`[data-error-for="${field}"]`);
+  if (el) { el.textContent = message; el.classList.remove('hidden'); }
+}
+
+function validerFormulaireClient(values) {
+  const erreurs = {};
+  if (!values.caisse_id) erreurs.caisse_id = "Sélectionnez une caisse.";
+  if (!values.nom_client) erreurs.nom_client = "Le nom du client est obligatoire.";
+  if (values.telephone && !TELEPHONE_REGEX.test(values.telephone)) erreurs.telephone = "Format international requis (ex. +33612345678).";
+  if (values.email && !EMAIL_REGEX.test(values.email)) erreurs.email = "Format d'email invalide.";
+
+  const telValide = values.telephone && TELEPHONE_REGEX.test(values.telephone);
+  const emailValide = values.email && EMAIL_REGEX.test(values.email);
+  if (!telValide && !emailValide) erreurs.contact = "Fournissez au moins un téléphone ou un email valide.";
+
+  if (!values.montant || parseFloat(values.montant) <= 0) erreurs.montant = "Le montant doit être supérieur à 0.";
+
+  return erreurs;
+}
+
+function renderAlert(type, message, ref) {
+  const isSuccess = type === 'success';
+  alertZone.innerHTML = `
+    <div class="animate-slide-in rounded-lg border px-4 py-3 text-sm flex items-start gap-3 ${isSuccess ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300' : 'bg-rose-500/10 border-rose-500/30 text-rose-300'}">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mt-0.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        ${isSuccess ? '<path d="M20 6L9 17l-5-5"/>' : '<circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/>'}
+      </svg>
+      <div>
+        <p class="font-medium">${message}</p>
+        ${ref ? `<p class="text-xs mt-1 font-mono text-slate-400">Réf : ${ref}</p>` : ''}
+      </div>
+    </div>`;
+}
+
+function formatDate(iso) {
+  const d = new Date(iso);
+  return d.toLocaleString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+}
+
+function formatMontant(m) {
+  return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(m);
+}
+
+async function chargerTransactions() {
+  try {
+    const res = await fetch('/api/payments');
+    const data = await res.json();
+    const transactions = data.transactions || [];
+
+    if (transactions.length === 0) {
+      transactionsBody.innerHTML = '';
+      emptyState.classList.remove('hidden');
+      return;
+    }
+    emptyState.classList.add('hidden');
+
+    transactionsBody.innerHTML = transactions.map(t => `
+      <tr class="animate-fade-in hover:bg-white/[0.02]">
+        <td class="py-3 pr-4 font-mono text-xs text-slate-400">${t.ref_transaction.slice(0, 8)}…</td>
+        <td class="py-3 pr-4"><span class="text-xs px-2 py-0.5 rounded-full bg-slate-850 border border-white/10">${t.caisse_id}</span></td>
+        <td class="py-3 pr-4">${t.nom_client}</td>
+        <td class="py-3 pr-4 text-xs text-slate-400">${t.email || t.telephone || '—'}</td>
+        <td class="py-3 pl-4 text-right font-medium">${formatMontant(t.montant)}</td>
+        <td class="py-3 pl-4 text-right text-xs text-slate-400">${formatDate(t.date)}</td>
+      </tr>
+    `).join('');
+  } catch (err) {
+    console.error('Erreur de chargement des transactions', err);
+  }
+}
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  clearFieldErrors();
+  alertZone.innerHTML = '';
+
+  const values = {
+    caisse_id: document.getElementById('caisse_id').value,
+    nom_client: document.getElementById('nom_client').value.trim(),
+    telephone: document.getElementById('telephone').value.trim(),
+    email: document.getElementById('email').value.trim(),
+    montant: document.getElementById('montant').value,
+  };
+
+  const erreurs = validerFormulaireClient(values);
+  if (Object.keys(erreurs).length > 0) {
+    Object.entries(erreurs).forEach(([field, message]) => showFieldError(field, message));
+    return;
+  }
+
+  submitBtn.disabled = true;
+  btnSpinner.classList.remove('hidden');
+  btnLabel.textContent = 'Traitement...';
+
+  try {
+    const res = await fetch('/api/payment', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ...values, montant: parseFloat(values.montant) }),
+    });
+    const data = await res.json();
+
+    if (res.ok && data.success) {
+      renderAlert('success', data.message, data.ref_transaction);
+      form.reset();
+      chargerTransactions();
+    } else {
+      renderAlert('error', (data.errors || ['Une erreur est survenue.']).join(' '));
+    }
+  } catch (err) {
+    renderAlert('error', 'Impossible de contacter le serveur.');
+  } finally {
+    submitBtn.disabled = false;
+    btnSpinner.classList.add('hidden');
+    btnLabel.textContent = 'Encaisser le paiement';
+  }
+});
+
+document.getElementById('refresh-btn').addEventListener('click', chargerTransactions);
+
+chargerTransactions();
+</script>
+</body>
+</html>

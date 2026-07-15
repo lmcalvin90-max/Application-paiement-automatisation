@@ -1,0 +1,58 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  lint:
+    name: Lint (Flake8)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Installer les dependances de lint
+        run: pip install flake8
+
+      - name: Analyser le code avec Flake8
+        run: flake8 app tests --max-line-length=120
+
+  test:
+    name: Tests (pytest)
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Installer les dependances
+        run: |
+          pip install -r app/requirements.txt
+          pip install pytest pytest-cov
+
+      - name: Executer les tests avec couverture
+        run: pytest --cov=app tests/
+
+  docker-build:
+    name: Docker Build
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Construire l'image de l'API Flask
+        run: docker build -t paiement-marchand-api:ci .
+
+      - name: Construire l'image Nginx
+        run: docker build -t paiement-marchand-nginx:ci ./nginx
