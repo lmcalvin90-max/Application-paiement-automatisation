@@ -12,23 +12,22 @@ import pytest
 os.environ["SKIP_DB_INIT"] = "1"
 os.environ["DATABASE_URL"] = "sqlite:///:memory:"
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-import app   # noqa: E402
+from app import app as app_module  # noqa: E402
 
 @pytest.fixture()
 def client():
-    # Configuration de l'instance Flask directement exposée par le module app
-    app.app.config["TESTING"] = True
-    app.app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///:memory:"
+    # app_module fait maintenant référence au fichier app/app.py
+    app_module.app.config["TESTING"] = True
+    app_module.app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///:memory:"
 
-    # Utilisation du contexte de l'application Flask (app.app) et de l'instance SQLAlchemy (app.db)
-    with app.app.app_context():
-        app.db.create_all()
+    with app_module.app.app_context():
+        app_module.db.create_all()
 
-    with app.app.test_client() as test_client:
+    with app_module.app.test_client() as test_client:
         yield test_client
 
-    with app.app.app_context():
-        app.db.drop_all()
+    with app_module.app.app_context():
+        app_module.db.drop_all()
 
 PAIEMENT_VALIDE = {
     "caisse_id": "CAISSE_01",
