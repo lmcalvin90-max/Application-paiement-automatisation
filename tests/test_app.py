@@ -14,7 +14,7 @@ import app as app_module # noqa: E402
 os.environ["SKIP_DB_INIT"] = "1"
 os.environ["DATABASE_URL"] = "sqlite:///:memory:"
 
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")    
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 @pytest.fixture()
 def client():
