@@ -7,15 +7,16 @@ Utilise une base SQLite en memoire pour executer les tests sans PostgreSQL
 import os
 import re
 import sys
+import pytest
+
+import app as app_module  # noqa: E402
 
 os.environ["SKIP_DB_INIT"] = "1"
 os.environ["DATABASE_URL"] = "sqlite:///:memory:"
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "app"))
 
-import pytest
 
-import app as app_module  # noqa: E402
 
 
 @pytest.fixture()
