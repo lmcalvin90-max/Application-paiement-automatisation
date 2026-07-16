@@ -9,7 +9,7 @@ import re
 import sys
 import pytest
 
-app as app_module # noqa: E402
+import app as app_module # noqa: E402
 
 os.environ["SKIP_DB_INIT"] = "1"
 os.environ["DATABASE_URL"] = "sqlite:///:memory:"
